@@ -1,5 +1,13 @@
 This is a program for generating and solving [Galaxies](https://www.puzzle-galaxies.com) puzzles. If you don't know what these puzzles are, check out the link, which explains the rules and you can also try to solve the puzzles there.
 
+# The puzzle
+
+There is a rectangular grid which contains some _galaxy centers_. A center can be in the middle of a cell, or on the boundary between two or four cells. A cell can only touch one center.
+
+The goal is to assign every cell to one of the galaxy centers. The set of cells assigned to that center is called a _galaxy_. Every galaxy must be connected (cells are considered neighbours if they share an edge) and it must also be 180-degree rotationally symmetrical. This assignment is a solution to the puzzle.
+
+It is possible for a grid and a set of centers to have no solutions or more than one solution, but for it to be a valid puzzle, it should have exactly one solution (similar to Sudoku etc.).
+
 # Usage
 
 **Solver:** This script finds a solution to a given puzzle, if there is any. Run `solve.py` and input the puzzle (using the standard input). The format is as follows:
@@ -28,6 +36,20 @@ Generally, with a constant density, bigger puzzles are harder to solve (and not 
 The `examples` folder contains some puzzles that you can input to the solver. All of them except `external.in` and `impossible.in` are generated using this generator. The puzzle `external.in` is puzzle #5,280,963 (10x10 Hard) from puzzle-galaxies.com. All of the puzzles except for `impossible.in` have a unique solution.
 
 All of the generated examples were made with the default density (0.14), except for `huge.in`, which had density 0.3.
+
+# Code organization
+
+The galaxies are referred to by their indexes (order in which they appear in the input). The grid (both in the generator and solver) is represented as a dictionary mapping cells (coordinate tuples) to their assigned galaxy IDs. A not-yet-assigned cell is not in the dictionary.
+
+The code is split up into the following files:
+
+- `common.py`: This contains functions used by both the solver and the generator.
+- `generate.py`: This implements the function `generate` which generates a puzzle. It is a wrapper for constructing the class `Generate` with the chosen parameters and calling its method `Generate.generate`, which does the work.
+- `solver.py`: This implements the function `solve` which finds the solution to a given puzzle and computes some other data along the way. It is a wrapper that constructs the class `Solve` and calls its method `Solve.solve`. This method returns any one solution of the puzzle (or `None` if there is none), and also computes the properties `solution_count`, `branch_count`, and `force_count`.
+- `batch.py`: The function `batch` generates many puzzles and returns a dictionary mapping their estimated difficulty (see _How it works_) to the puzzle statements.
+- `i_o.py`: This contains functions that read/write the input/output of the functions in other files from/to the standard input/output.
+
+For more information on specific methods, see their docstrings.
 
 # How it works
 
