@@ -19,6 +19,7 @@ def print_solution(width: int, height: int, solution: dict[Point, int] | None):
             cell = solution.get((row, column))
             print(str(cell).rjust(cellsize), end = '  ')
         print()
+    print()
 
 def print_puzzle(width: int, height: int, galaxies: list[Point]):
     print(width, height)
